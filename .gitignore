@@ -67,3 +67,10 @@ htmlcov/
 tmp/
 temp/
 *.tmp
+
+# Node.js / Frontend
+node_modules/
+package-lock.json
+postcss.config.js
+
+

@@ -46,18 +46,32 @@ class Database:
         """Create necessary indexes for all collections"""
         try:
             # Users
-            await cls.db.users.create_index([("phone", ASCENDING)], unique=True)
+            try:
+                await cls.db.users.create_index([("phone", ASCENDING)], unique=True)
+            except Exception as e:
+                if "duplicate key" not in str(e).lower():
+                    logger.warning(f"Index creation warning for users.phone: {e}")
+            
             await cls.db.users.create_index([("location", GEOSPHERE)])
             await cls.db.users.create_index([("created_at", DESCENDING)])
             
             # Recyclers
-            await cls.db.recyclers.create_index([("phone", ASCENDING)], unique=True)
+            try:
+                await cls.db.recyclers.create_index([("phone", ASCENDING)], unique=True)
+            except Exception as e:
+                if "duplicate key" not in str(e).lower():
+                    logger.warning(f"Index creation warning for recyclers.phone: {e}")
+            
             await cls.db.recyclers.create_index([("location", GEOSPHERE)])
             await cls.db.recyclers.create_index([("is_active", ASCENDING)])
             await cls.db.recyclers.create_index([("catchment_wards", ASCENDING)])
             
             # Wallets
-            await cls.db.wallets.create_index([("user_id", ASCENDING)], unique=True)
+            try:
+                await cls.db.wallets.create_index([("user_id", ASCENDING)], unique=True)
+            except Exception as e:
+                if "duplicate key" not in str(e).lower():
+                    logger.warning(f"Index creation warning for wallets.user_id: {e}")
             
             # Pending Items
             await cls.db.pending_items.create_index([("user_id", ASCENDING)])
@@ -73,7 +87,12 @@ class Database:
             await cls.db.completed_scans.create_index([("completed_at", DESCENDING)])
             
             # Tokens
-            await cls.db.tokens.create_index([("token_id", ASCENDING)], unique=True)
+            try:
+                await cls.db.tokens.create_index([("token_id", ASCENDING)], unique=True)
+            except Exception as e:
+                if "duplicate key" not in str(e).lower():
+                    logger.warning(f"Index creation warning for tokens.token_id: {e}")
+            
             await cls.db.tokens.create_index([("user_id", ASCENDING)])
             await cls.db.tokens.create_index([("status", ASCENDING)])
             await cls.db.tokens.create_index([("expires_at", ASCENDING)])
@@ -100,7 +119,11 @@ class Database:
             await cls.db.rag_personal.create_index([("embedding_id", ASCENDING)])
             
             # User Behavior
-            await cls.db.user_behavior.create_index([("user_id", ASCENDING)], unique=True)
+            try:
+                await cls.db.user_behavior.create_index([("user_id", ASCENDING)], unique=True)
+            except Exception as e:
+                if "duplicate key" not in str(e).lower():
+                    logger.warning(f"Index creation warning for user_behavior.user_id: {e}")
             
             # Pickups
             await cls.db.pickups.create_index([("user_id", ASCENDING)])
