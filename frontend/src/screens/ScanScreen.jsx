@@ -4,7 +4,8 @@ import { useTranslation } from '../../node_modules/react-i18next';
 import CameraInput from '../components/CameraInput';
 import { Loader } from '../components/ReactBits';
 import { scanImage } from '../api/api';
-import { useScanStore } from '../stores';
+import { useScanStore, useUserStore, useLanguageStore } from '../stores';
+import { useGeolocation } from '../hooks/useGeolocation';
 
 const ScanScreen = () => {
   const navigate = useNavigate();
@@ -12,12 +13,38 @@ const ScanScreen = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const { setScan, addToHistory } = useScanStore();
+  const { user } = useUserStore();
+  const { language } = useLanguageStore();
+  const location = useGeolocation();
 
   const handleCapture = async (imageFile) => {
     setLoading(true);
     setError(null);
+
+    // Get user ID (use mock if not logged in)
+    const userId = user?.id || 'user_test_001';
+
+    // Check if location is available
+    if (location.loading) {
+      setError('Waiting for location...');
+      setLoading(false);
+      return;
+    }
+
+    if (!location.latitude || !location.longitude) {
+      setError('Location is required for scanning. Please enable location access.');
+      setLoading(false);
+      return;
+    }
+
     try {
-      const result = await scanImage(imageFile);
+      const result = await scanImage(
+        imageFile,
+        userId,
+        location.latitude,
+        location.longitude,
+        language
+      );
       setScan(result);
       addToHistory(result);
       navigate('/result');

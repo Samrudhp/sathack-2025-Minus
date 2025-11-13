@@ -1,0 +1,102 @@
+@import "tailwindcss";
+
+@theme {
+  /* Custom color palette */
+  --color-beige: #f5f0e6;
+  --color-beige-light: #faf7f2;
+  --color-beige-dark: #e8dfd0;
+  
+  --color-forest: #2f5233;
+  --color-forest-light: #3d6b42;
+  --color-forest-dark: #1f3622;
+  
+  --color-olive: #afc3a2;
+  --color-olive-light: #c4d4b9;
+  --color-olive-dark: #8fa985;
+  
+  --color-hazard: #b73939;
+  --color-hazard-light: #d14545;
+  --color-hazard-dark: #8a2a2a;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-beige);
+    color: var(--color-forest);
+    font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+    margin: 0;
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    background-color: var(--color-forest);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .btn-primary:hover {
+    background-color: var(--color-forest-dark);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  .btn-primary:active {
+    transform: scale(0.95);
+  }
+  
+  .btn-secondary {
+    background-color: var(--color-olive);
+    color: var(--color-forest);
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  
+  .btn-secondary:hover {
+    background-color: var(--color-olive-dark);
+  }
+  
+  .btn-hazard {
+    background-color: var(--color-hazard);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  
+  .btn-hazard:hover {
+    background-color: var(--color-hazard-dark);
+  }
+  
+  .card {
+    background-color: white;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.2s;
+  }
+  
+  .card:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .input-field {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    border: 2px solid var(--color-olive);
+    background-color: white;
+  }
+  
+  .input-field:focus {
+    outline: none;
+    border-color: var(--color-forest);
+  }
+}

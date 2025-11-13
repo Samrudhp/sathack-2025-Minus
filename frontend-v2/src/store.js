@@ -1,0 +1,40 @@
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+
+// User store with mock user for testing
+export const useUserStore = create(
+  persist(
+    (set) => ({
+      user: { 
+        id: '673fc7f4f1867ab46b0a8c01',  // Valid ObjectId from seeded data
+        name: 'Test User',
+        phone: '+919876543210'
+      },
+      language: 'en',
+      setUser: (user) => set({ user }),
+      setLanguage: (language) => set({ language }),
+      logout: () => set({ user: null }),
+    }),
+    { name: 'user-storage' }
+  )
+);
+
+// Scan results store
+export const useScanStore = create((set) => ({
+  currentScan: null,
+  globalDocs: [],
+  personalDocs: [],
+  setScan: (scan, globalDocs = [], personalDocs = []) => 
+    set({ currentScan: scan, globalDocs, personalDocs }),
+  clearScan: () => set({ currentScan: null, globalDocs: [], personalDocs: [] }),
+}));
+
+// Location store
+export const useLocationStore = create((set) => ({
+  latitude: null,
+  longitude: null,
+  loading: true,
+  error: null,
+  setLocation: (lat, lon) => set({ latitude: lat, longitude: lon, loading: false }),
+  setError: (error) => set({ error, loading: false }),
+}));

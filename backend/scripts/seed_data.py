@@ -105,10 +105,10 @@ async def seed_global_rag():
     # Clear existing documents (optional - comment out to preserve existing)
     # await collection.delete_many({})
     
-    # Generate random embeddings (768-dim for CLIP compatibility)
+    # Generate random embeddings (512-dim for CLIP ViT-B/32 compatibility)
     # In production, these would be actual CLIP embeddings
     for doc in GLOBAL_RAG_SAMPLES:
-        doc["embedding"] = np.random.randn(768).astype(np.float32).tolist()
+        doc["embedding"] = np.random.randn(512).astype(np.float32).tolist()
         doc["created_at"] = datetime.utcnow()
     
     # Insert documents

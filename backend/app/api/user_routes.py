@@ -88,3 +88,26 @@ async def get_token_balance(user_id: str = Query(...)):
     except Exception as e:
         logger.error(f"Get token balance failed: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/wallet/{user_id}")
+async def get_wallet(user_id: str):
+    """Get user's wallet details"""
+    try:
+        wallets_collection = get_wallets_collection()
+        wallet = await wallets_collection.find_one({"user_id": ObjectId(user_id)})
+        
+        if not wallet:
+            raise HTTPException(status_code=404, detail="Wallet not found")
+        
+        # Convert ObjectId to string
+        wallet["_id"] = str(wallet["_id"])
+        wallet["user_id"] = str(wallet["user_id"])
+        
+        return wallet
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Get wallet failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))

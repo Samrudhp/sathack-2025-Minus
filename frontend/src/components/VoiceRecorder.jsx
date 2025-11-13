@@ -47,6 +47,8 @@ const VoiceRecorder = ({ onRecordingComplete, onCancel }) => {
         const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
         setAudioBlob(audioBlob);
         stream.getTracks().forEach(track => track.stop());
+        // Automatically send to backend
+        onRecordingComplete(audioBlob);
       };
 
       mediaRecorder.start();
@@ -64,12 +66,6 @@ const VoiceRecorder = ({ onRecordingComplete, onCancel }) => {
     }
   };
 
-  const handleUseRecording = () => {
-    if (audioBlob) {
-      onRecordingComplete(audioBlob);
-    }
-  };
-
   const handleRetry = () => {
     setAudioBlob(null);
     audioChunksRef.current = [];
@@ -80,7 +76,7 @@ const VoiceRecorder = ({ onRecordingComplete, onCancel }) => {
       <div className="text-center py-12">
         <div className="text-6xl mb-6">🎤</div>
         <h2 className="text-2xl font-bold text-forest mb-6">
-          {isRecording ? t('voice.recording') : t('voice.speak_now')}
+          {isRecording ? 'Recording...' : 'Voice Query'}
         </h2>
 
         {/* Waveform Animation */}
@@ -94,51 +90,37 @@ const VoiceRecorder = ({ onRecordingComplete, onCancel }) => {
           ))}
         </div>
 
-        {!audioBlob ? (
-          <div className="space-y-4">
-            {!isRecording ? (
-              <div>
-                <button
-                  onMouseDown={startRecording}
-                  onMouseUp={stopRecording}
-                  onTouchStart={startRecording}
-                  onTouchEnd={stopRecording}
-                  className="relative w-24 h-24 bg-forest rounded-full text-white text-4xl flex items-center justify-center hover:bg-opacity-90 transition-all mx-auto"
-                >
-                  🎤
-                  <div className="absolute inset-0 rounded-full bg-forest opacity-50 pulse-ring" />
-                </button>
-                <p className="text-sm text-gray-600 mt-4">
-                  {t('voice.press_hold')}
-                </p>
-              </div>
-            ) : (
+        <div className="space-y-4">
+          {!isRecording ? (
+            <div>
               <button
-                onClick={stopRecording}
-                className="w-24 h-24 bg-hazard rounded-full text-white text-4xl flex items-center justify-center hover:bg-opacity-90 transition-all mx-auto"
+                onMouseDown={startRecording}
+                onMouseUp={stopRecording}
+                onTouchStart={startRecording}
+                onTouchEnd={stopRecording}
+                className="relative w-24 h-24 bg-forest rounded-full text-white text-4xl flex items-center justify-center hover:bg-opacity-90 transition-all mx-auto"
               >
-                ⏹️
+                🎤
+                <div className="absolute inset-0 rounded-full bg-forest opacity-50 pulse-ring" />
               </button>
-            )}
-            {onCancel && (
-              <Button variant="outline" onClick={onCancel}>
-                Cancel
-              </Button>
-            )}
-          </div>
-        ) : (
-          <div className="space-y-4">
-            <p className="text-green-600 font-semibold">✓ Recording Complete</p>
-            <div className="flex gap-4 justify-center">
-              <Button variant="outline" onClick={handleRetry}>
-                Retry
-              </Button>
-              <Button variant="primary" onClick={handleUseRecording}>
-                Use Recording
-              </Button>
+              <p className="text-sm text-gray-600 mt-4">
+                Press and hold to record
+              </p>
             </div>
-          </div>
-        )}
+          ) : (
+            <button
+              onClick={stopRecording}
+              className="w-24 h-24 bg-hazard rounded-full text-white text-4xl flex items-center justify-center hover:bg-opacity-90 transition-all mx-auto"
+            >
+              ⏹️
+            </button>
+          )}
+          {onCancel && (
+            <Button variant="outline" onClick={onCancel}>
+              Cancel
+            </Button>
+          )}
+        </div>
       </div>
     </Card>
   );

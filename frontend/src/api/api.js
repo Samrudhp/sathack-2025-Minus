@@ -37,18 +37,29 @@ api.interceptors.response.use(
 // USER APIs
 // ============================================
 
-export const scanImage = async (imageFile) => {
+export const scanImage = async (imageFile, userId, latitude, longitude, language = 'en', queryText = null) => {
   const formData = new FormData();
   formData.append('image', imageFile);
+  formData.append('user_id', userId);
+  formData.append('latitude', latitude.toString());
+  formData.append('longitude', longitude.toString());
+  formData.append('language', language);
+  if (queryText) {
+    formData.append('query_text', queryText);
+  }
   const response = await api.post('/scan_image', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   });
   return response.data;
 };
 
-export const voiceInput = async (audioBlob) => {
+export const voiceInput = async (audioBlob, userId, latitude, longitude, language = 'en') => {
   const formData = new FormData();
   formData.append('audio', audioBlob, 'voice.webm');
+  formData.append('user_id', userId);
+  formData.append('latitude', latitude.toString());
+  formData.append('longitude', longitude.toString());
+  formData.append('language', language);
   const response = await api.post('/voice_input', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   });

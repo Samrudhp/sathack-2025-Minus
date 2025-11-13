@@ -20,7 +20,7 @@ class FusionLayer(nn.Module):
     
     def __init__(
         self,
-        target_dim: int = 768,
+        target_dim: int = 512,  # Changed from 768 to match CLIP ViT-B/32
         loc_dim: int = 128,
         user_dim: int = 256,
         time_dim: int = 64
@@ -70,14 +70,14 @@ class FusionLayer(nn.Module):
         Fuse embeddings with weighted combination
         
         Args:
-            v_img: [batch, 768] - CLIP image embedding
-            v_text: [batch, 768] - CLIP text embedding
+            v_img: [batch, 512] - CLIP image embedding (ViT-B/32)
+            v_text: [batch, 512] - CLIP text embedding (ViT-B/32)
             v_loc: [batch, 128] - Location features
             v_user: [batch, 256] - User history features
             v_time: [batch, 64] - Time features
         
         Returns:
-            v_fused: [batch, 768] - Fused embedding
+            v_fused: [batch, 512] - Fused embedding
         """
         batch_size = (v_img.shape[0] if v_img is not None 
                      else v_text.shape[0] if v_text is not None
@@ -149,14 +149,14 @@ class FusionService:
         Fuse embeddings from multiple modalities
         
         Args:
-            v_img: [768] - CLIP image embedding
-            v_text: [768] - CLIP text embedding
+            v_img: [512] - CLIP image embedding (ViT-B/32)
+            v_text: [512] - CLIP text embedding (ViT-B/32)
             v_loc: [128] - Location features
             v_user: [256] - User history features
             v_time: [64] - Time features
         
         Returns:
-            v_fused: [768] - Fused embedding
+            v_fused: [512] - Fused embedding
         """
         try:
             if self.model is None:

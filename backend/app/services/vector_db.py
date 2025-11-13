@@ -14,7 +14,7 @@ class VectorDB:
     
     def __init__(self):
         self.initialized = False
-        self.dimension = 768  # CLIP embedding dimension
+        self.dimension = 512  # CLIP ViT-B/32 embedding dimension
     
     async def initialize(self):
         """Initialize the vector database"""
