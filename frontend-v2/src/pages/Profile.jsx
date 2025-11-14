@@ -97,65 +97,85 @@ export default function Profile() {
   }
 
   return (
-    <div className="min-h-screen bg-beige p-6">
+    <div className="min-h-screen p-6" style={{ background: '#faf8f3' }}>
       <div className="max-w-4xl mx-auto">
         <button
           onClick={() => navigate('/')}
-          className="mb-6 text-forest font-semibold flex items-center gap-2 hover:gap-4 transition-all"
+          className="mb-6 font-semibold flex items-center gap-2 hover:gap-4 transition-all rounded-full px-6 py-3"
+          style={{
+            color: '#2d5016',
+            background: 'white',
+            border: '2px solid #e8dfd0'
+          }}
         >
           ← {language === 'en' ? 'Back' : 'वापस'}
         </button>
 
-        <h1 className="text-3xl font-bold text-forest mb-6">
-          👤 {language === 'en' ? 'My Profile' : 'मेरी प्रोफ़ाइल'}
-        </h1>
+        <div className="mb-8 flex items-center gap-4">
+          <div className="w-16 h-16 rounded-2xl flex items-center justify-center" style={{
+            background: 'linear-gradient(135deg, #4a7c2c 0%, #2d5016 100%)',
+            boxShadow: '0 6px 16px rgba(74, 124, 44, 0.3)'
+          }}>
+            <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+          </div>
+          <h1 className="text-4xl font-bold" style={{ color: '#2d5016' }}>
+            {language === 'en' ? 'My Profile' : 'मेरी प्रोफ़ाइल'}
+          </h1>
+        </div>
 
         {/* Total Impact */}
-        <div className="card mb-6">
-          <h2 className="text-2xl font-bold text-forest mb-4">
-            🌍 {language === 'en' ? 'Total Impact' : 'कुल प्रभाव'}
+        <div className="card mb-6 relative overflow-hidden" style={{
+          background: 'linear-gradient(135deg, #b4d4a5 0%, #87a878 100%)'
+        }}>
+          <div className="absolute top-0 right-0 text-9xl opacity-10">🌍</div>
+          <h2 className="text-2xl font-bold text-white mb-4 relative z-10">
+            {language === 'en' ? 'Total Impact' : 'कुल प्रभाव'}
           </h2>
-          <div className="grid grid-cols-3 gap-4 mb-4">
-            <div className="text-center p-4 bg-olive-light rounded-lg">
-              <div className="text-3xl font-bold text-forest">{stats.total_co2_saved_kg.toFixed(1)}</div>
-              <div className="text-sm text-olive-dark">kg CO₂</div>
+          <div className="grid grid-cols-3 gap-4 mb-4 relative z-10">
+            <div className="text-center p-4 rounded-xl" style={{ background: 'rgba(255, 255, 255, 0.9)' }}>
+              <div className="text-3xl font-bold" style={{ color: '#2d5016' }}>{stats.total_co2_saved_kg.toFixed(1)}</div>
+              <div className="text-sm" style={{ color: '#5f7c4d' }}>kg CO₂</div>
             </div>
-            <div className="text-center p-4 bg-olive-light rounded-lg">
-              <div className="text-3xl font-bold text-forest">{stats.total_water_saved_liters.toFixed(0)}</div>
-              <div className="text-sm text-olive-dark">{language === 'en' ? 'Liters Water' : 'लीटर पानी'}</div>
+            <div className="text-center p-4 rounded-xl" style={{ background: 'rgba(255, 255, 255, 0.9)' }}>
+              <div className="text-3xl font-bold" style={{ color: '#2d5016' }}>{stats.total_water_saved_liters.toFixed(0)}</div>
+              <div className="text-sm" style={{ color: '#5f7c4d' }}>{language === 'en' ? 'Liters Water' : 'लीटर पानी'}</div>
             </div>
-            <div className="text-center p-4 bg-olive-light rounded-lg">
-              <div className="text-3xl font-bold text-forest">{stats.total_landfill_saved_kg.toFixed(1)}</div>
-              <div className="text-sm text-olive-dark">kg {language === 'en' ? 'Landfill' : 'लैंडफिल'}</div>
+            <div className="text-center p-4 rounded-xl" style={{ background: 'rgba(255, 255, 255, 0.9)' }}>
+              <div className="text-3xl font-bold" style={{ color: '#2d5016' }}>{stats.total_landfill_saved_kg.toFixed(1)}</div>
+              <div className="text-sm" style={{ color: '#5f7c4d' }}>kg {language === 'en' ? 'Landfill' : 'लैंडफिल'}</div>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="p-4 bg-beige rounded-lg border-2 border-olive-light">
-              <div className="text-2xl font-bold text-forest">{stats.total_scans}</div>
-              <div className="text-sm text-olive-dark">{language === 'en' ? 'Total Scans' : 'कुल स्कैन'}</div>
+          <div className="grid grid-cols-2 gap-4 relative z-10">
+            <div className="p-4 rounded-xl" style={{ background: 'rgba(255, 255, 255, 0.9)', border: '2px solid #e8dfd0' }}>
+              <div className="text-2xl font-bold" style={{ color: '#2d5016' }}>{stats.total_scans}</div>
+              <div className="text-sm" style={{ color: '#5f7c4d' }}>{language === 'en' ? 'Total Scans' : 'कुल स्कैन'}</div>
             </div>
-            <div className="p-4 bg-forest rounded-lg">
-              <div className="text-2xl font-bold text-beige">{stats.tokens_balance}</div>
-              <div className="text-sm text-olive-light">{language === 'en' ? 'Tokens Available' : 'टोकन उपलब्ध'}</div>
+            <div className="p-4 rounded-xl" style={{ background: 'linear-gradient(135deg, #4a7c2c 0%, #2d5016 100%)' }}>
+              <div className="text-2xl font-bold text-white">{stats.tokens_balance}</div>
+              <div className="text-sm text-white/80">{language === 'en' ? 'Tokens Available' : 'टोकन उपलब्ध'}</div>
             </div>
           </div>
         </div>
 
         {/* Redeem Code */}
         <div className="card mb-6">
-          <h2 className="text-2xl font-bold text-forest mb-4">
+          <h2 className="text-2xl font-bold mb-4" style={{ color: '#2d5016' }}>
             🎫 {language === 'en' ? 'Redeem Code' : 'कोड रिडीम करें'}
           </h2>
-          <p className="text-olive-dark mb-4">
+          <p className="mb-4" style={{ color: '#5f7c4d' }}>
             {language === 'en' 
               ? 'Enter the 6-character code from the recycler to claim your tokens!' 
               : 'अपने टोकन प्राप्त करने के लिए रीसाइकलर से 6-अक्षर का कोड दर्ज करें!'}
           </p>
 
           {message.text && (
-            <div className={`p-4 rounded-lg mb-4 ${
-              message.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+            <div className={`p-4 rounded-2xl mb-4 font-semibold ${
+              message.type === 'success' 
+                ? 'bg-gradient-to-r from-green-500 to-green-600 text-white' 
+                : 'bg-gradient-to-r from-red-500 to-red-600 text-white'
             }`}>
               {message.text}
             </div>
@@ -168,20 +188,35 @@ export default function Profile() {
               onChange={(e) => setRedeemCode(e.target.value.toUpperCase())}
               placeholder={language === 'en' ? 'Enter code (e.g. ABC123)' : 'कोड दर्ज करें'}
               maxLength={6}
-              className="flex-1 px-4 py-3 border-2 border-olive-light rounded-lg text-lg font-mono tracking-widest uppercase"
+              className="flex-1 px-4 py-3 rounded-xl text-lg font-mono tracking-widest uppercase"
+              style={{
+                border: '2px solid #e8dfd0',
+                background: 'white',
+                color: '#2d5016'
+              }}
               required
               disabled={loading}
             />
             <button
               type="submit"
-              className="btn-primary px-8"
+              className="px-8 py-3 rounded-xl font-semibold transition-all hover:scale-105"
+              style={{
+                background: loading || redeemCode.length !== 6 
+                  ? '#e8dfd0' 
+                  : 'linear-gradient(135deg, #4a7c2c 0%, #2d5016 100%)',
+                color: loading || redeemCode.length !== 6 ? '#5f7c4d' : 'white',
+                boxShadow: loading || redeemCode.length !== 6 ? 'none' : '0 6px 20px rgba(74, 124, 44, 0.3)'
+              }}
               disabled={loading || redeemCode.length !== 6}
             >
               {loading ? '⏳' : '✓'} {language === 'en' ? 'Redeem' : 'रिडीम करें'}
             </button>
           </form>
 
-          <div className="mt-4 text-sm text-olive-dark">
+          <div className="mt-4 text-sm p-3 rounded-xl" style={{ 
+            background: 'rgba(180, 212, 165, 0.1)',
+            color: '#5f7c4d'
+          }}>
             💡 {language === 'en' 
               ? 'Codes are provided by recyclers when you deliver your waste to them.' 
               : 'जब आप अपना कचरा रीसाइकलर को देते हैं तो कोड प्रदान किए जाते हैं।'}
@@ -190,21 +225,21 @@ export default function Profile() {
 
         {/* Lifetime Stats */}
         <div className="card">
-          <h2 className="text-2xl font-bold text-forest mb-4">
+          <h2 className="text-2xl font-bold mb-4" style={{ color: '#2d5016' }}>
             📈 {language === 'en' ? 'Lifetime Stats' : 'आजीवन आंकड़े'}
           </h2>
           <div className="space-y-3">
-            <div className="flex justify-between p-3 bg-beige rounded-lg">
-              <span className="text-olive-dark">{language === 'en' ? 'Total Tokens Earned' : 'कुल अर्जित टोकन'}</span>
-              <span className="font-bold text-forest">{stats.tokens_earned}</span>
+            <div className="flex justify-between p-3 rounded-xl" style={{ background: 'rgba(180, 212, 165, 0.1)' }}>
+              <span style={{ color: '#5f7c4d' }}>{language === 'en' ? 'Total Tokens Earned' : 'कुल अर्जित टोकन'}</span>
+              <span className="font-bold" style={{ color: '#2d5016' }}>{stats.tokens_earned}</span>
             </div>
-            <div className="flex justify-between p-3 bg-beige rounded-lg">
-              <span className="text-olive-dark">{language === 'en' ? 'Current Balance' : 'वर्तमान शेष'}</span>
-              <span className="font-bold text-forest">{stats.tokens_balance}</span>
+            <div className="flex justify-between p-3 rounded-xl" style={{ background: 'rgba(180, 212, 165, 0.1)' }}>
+              <span style={{ color: '#5f7c4d' }}>{language === 'en' ? 'Current Balance' : 'वर्तमान शेष'}</span>
+              <span className="font-bold" style={{ color: '#2d5016' }}>{stats.tokens_balance}</span>
             </div>
-            <div className="flex justify-between p-3 bg-beige rounded-lg">
-              <span className="text-olive-dark">{language === 'en' ? 'Total Scans' : 'कुल स्कैन'}</span>
-              <span className="font-bold text-forest">{stats.total_scans}</span>
+            <div className="flex justify-between p-3 rounded-xl" style={{ background: 'rgba(180, 212, 165, 0.1)' }}>
+              <span style={{ color: '#5f7c4d' }}>{language === 'en' ? 'Total Scans' : 'कुल स्कैन'}</span>
+              <span className="font-bold" style={{ color: '#2d5016' }}>{stats.total_scans}</span>
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
-### MAKE UI BETTER
+### MAKE UI BETTER -- done
 
-### Recycler retreival issue on map
+### Recycler retreival issue on map 
 
 ### multi lingual

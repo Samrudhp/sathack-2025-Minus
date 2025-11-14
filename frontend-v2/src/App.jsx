@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useUserStore } from './store';
+import Landing from './pages/Landing';
 import Home from './pages/Home';
 import Scan from './pages/Scan';
 import Voice from './pages/Voice';
@@ -29,7 +30,8 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Landing />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/scan" element={<Scan />} />
         <Route path="/voice" element={<Voice />} />
         <Route path="/result" element={<Result />} />
@@ -42,3 +44,4 @@ function App() {
 }
 
 export default App;
+
