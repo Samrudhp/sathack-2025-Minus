@@ -1,15 +1,21 @@
-# 🌱 ReNova - AI-Powered Waste Intelligence Platform
+# 🌱 ReNova - GenAI-Powered Waste Intelligence Platform
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![React](https://img.shields.io/badge/react-18.0+-61DAFB.svg)](https://reactjs.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688.svg)](https://fastapi.tiangolo.com/)
 
-> **Smart waste management through multimodal AI: Vision, Voice, and RAG-powered personalized recycling guidance**
+> **Smart waste management through multimodal AI: Vision, Voice, and Dual-RAG-powered personalized recycling guidance**
 
 ReNova transforms waste disposal from a mundane chore into an engaging, rewarding experience. Using cutting-edge AI (CLIP vision, Whisper voice, Llama reasoning), we provide hyper-personalized recycling guidance that adapts to your city's regulations, your past behavior, and real-time recycler availability.
 
 ---
+
+## Team Members - Team - Minus (Ramaiah Institute Of Technology)
+- Saksham Yadav - 7678369133
+- Sagar S R     - 9482209148 
+- Samrudh P     - 7676296599
+- Kushal L      - 8660179391
 
 ## 🎯 Problem Statement
 
@@ -27,7 +33,7 @@ India generates **150,000 tonnes** of waste daily, but only **60%** is collected
 
 ## 💡 Our Solution
 
-ReNova is a **multimodal AI platform** that makes waste management:
+ReNova is a **multimodal GenAI platform** that makes waste management:
 
 ✅ **Effortless** - Scan item → Get instant guidance (vision AI)  
 ✅ **Accessible** - Speak your question → Get answers (voice AI in 12 languages)  
@@ -41,7 +47,8 @@ ReNova is a **multimodal AI platform** that makes waste management:
 ```
 1. USER → Scan waste (image) or ask question (voice)
 2. CLIP → Identifies material, cleanliness, hazards
-3. RAG → Retrieves city regulations + user history
+3. DualRAG → GlobalRAG : Retrieves city regulations + user history
+             PersonalRAG : personal patterns 
 4. LLM → Generates personalized disposal advice
 5. GEO → Finds nearest verified recyclers
 6. REWARD → User earns tokens based on material value
@@ -82,22 +89,36 @@ ReNova is a **multimodal AI platform** that makes waste management:
               ┌───────────────┼───────────────┐
               │               │               │
          ┌────▼────┐    ┌─────▼─────┐   ┌────▼─────┐
-         │ MongoDB │    │  Qdrant   │   │   OSM    │
+         │ MongoDB │    │  Faiss    │   │   OSM    │
          │ (Users, │    │  (Vector  │   │ (Geo +   │
          │ Scans)  │    │   RAG)    │   │ Routing) │
          └─────────┘    └───────────┘   └──────────┘
 ```
 
-### Tech Stack
+## Why Dual RAG? 
+
+- ReNova uses two separate vector databases:
+
+    Global RAG — shared knowledge base for all users
+        Contains general waste management guidelines, recycling best practices, material classifications, disposal instructions, and environmental regulations.
+        Built from curated documents and maintained by the platform.
+        Read-only for users; updated by admins or automated ingestion pipelines.
+
+    Personal RAG — user-specific knowledge base
+        Stores documents uploaded by individual users (e.g., local recycling center guidelines, personal notes, community-specific rules).
+        Each user has their own isolated vector space.
+        Allows personalization: users in different cities get context relevant to their local recycling infrastructure.
+----
+
+## Tech Stack
 
 #### **Backend** (Python 3.10+)
 - **FastAPI**: Async REST API framework
 - **MongoDB**: User profiles, scans, transactions
-- **Qdrant**: Vector database for RAG (global + personal knowledge)
+- **Faiss**: Vector database for RAG (global + personal knowledge)
 - **CLIP (ViT-B/32)**: Zero-shot image classification (local inference)
 - **Whisper (Small)**: Multilingual speech-to-text (local inference)
 - **Groq (Llama 3.3 70B)**: LLM reasoning (FREE API)
-- **Bhashini**: Government API for 12 Indian languages
 - **OSRM**: Open-source routing for recycler navigation
 
 #### **Frontend** (React 18)
@@ -107,10 +128,6 @@ ReNova is a **multimodal AI platform** that makes waste management:
 - **Leaflet**: Interactive maps
 - **Axios**: HTTP client
 
-#### **DevOps**
-- **Docker**: Containerization (TODO)
-- **GitHub Actions**: CI/CD (TODO)
-- **Nginx**: Reverse proxy (TODO)
 
 ---
 
@@ -146,8 +163,7 @@ pip install -r requirements.txt
 cat > .env << EOF
 MONGODB_URI=mongodb://localhost:27017/
 GROQ_API_KEY=your_groq_api_key_here
-BHASHINI_API_KEY=your_bhashini_key_here
-BHASHINI_USER_ID=your_bhashini_user_id_here
+
 EOF
 
 # Run server
@@ -220,6 +236,7 @@ python scripts/seed_rag_docs.py   # Adds waste management guidelines
 
 ---
 
+
 ## 🔐 Security & Privacy
 
 ### For Users:
@@ -242,13 +259,6 @@ python scripts/seed_rag_docs.py   # Adds waste management guidelines
 - **CORS configuration** (whitelist trusted origins)
 - **API key rotation** (monthly automated)
 - **Audit logs** (all transactions tracked)
-
-### Future Security Roadmap:
-- [ ] OAuth2 authentication (Google, Apple Sign-In)
-- [ ] JWT token refresh mechanism
-- [ ] Two-factor authentication for recyclers
-- [ ] Blockchain-based transaction ledger (immutable audit trail)
-- [ ] ISO 27001 compliance certification
 
 ---
 
@@ -389,50 +399,6 @@ estimated_credits = weight_kg × material_rate × (cleanliness_score / 100)
 
 ---
 
-## 🏆 Competitive Advantages
-
-| Feature | Traditional Apps | ReNova |
-|---------|-----------------|---------|
-| **Material Detection** | Manual input | AI-powered (CLIP) |
-| **Personalization** | None | RAG-based dual context |
-| **Multilingual** | 2-3 languages | 12 Indian languages |
-| **Voice Support** | No | Yes (Whisper + Bhashini) |
-| **Location-Aware** | Generic rules | City-specific regulations |
-| **Gamification** | Basic points | Token economy + leaderboards |
-| **Recycler Network** | Static list | Smart marketplace with routing |
-| **B2G Ready** | No | White-label solution available |
-| **Open Source** | No | MIT License (community-driven) |
-
----
-
-## 🛣️ Roadmap
-
-### ✅ Phase 1: MVP (Current)
-- [x] CLIP-based image classification
-- [x] Whisper voice transcription
-- [x] RAG with dual context (global + personal)
-- [x] Recycler marketplace with geospatial ranking
-- [x] Token economy
-- [x] Basic frontend (React)
-
-### 🚧 Phase 2: Production (Next 3 Months)
-- [ ] Mobile apps (React Native)
-- [ ] OAuth2 authentication
-- [ ] Payment gateway integration (Razorpay)
-- [ ] Blockchain-based transaction ledger
-- [ ] Advanced fraud detection
-- [ ] 10 city onboarding (Delhi, Mumbai, Bangalore, Chennai, etc.)
-
-### 🔮 Phase 3: Scale (6-12 Months)
-- [ ] B2G pilots with 3 municipalities
-- [ ] Carbon credit marketplace
-- [ ] Enterprise ESG dashboard
-- [ ] AR-based waste sorting game
-- [ ] IoT-enabled smart bins integration
-- [ ] Pan-India expansion (100+ cities)
-
----
-
 ## 🤝 Contributing
 
 We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
@@ -454,31 +420,12 @@ We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guid
 
 ---
 
-## 📄 License
-
-This project is licensed under the **MIT License** - see [LICENSE](LICENSE) file for details.
-
-**TL;DR**: You can use, modify, distribute this code freely. Just keep the copyright notice!
-
----
-
-## 👥 Team
-
-**ReNova** is built by passionate developers solving real-world sustainability challenges.
-
-- **Samrudh P** - [@Samrudhp](https://github.com/Samrudhp) - Full Stack & AI Engineering
-
-*Want to join the team? We're hiring! Email: careers@renova.eco*
-
----
 
 ## 📞 Contact & Support
 
-- **Website**: https://renova.eco (coming soon)
-- **Email**: support@renova.eco
+- **Email**: samrudhprakash3084@gmail.com
 - **GitHub Issues**: [Report bugs here](https://github.com/Samrudhp/sathack/issues)
-- **Twitter**: [@RenovaEco](https://twitter.com/renovaeco) (coming soon)
-- **Discord**: [Join community](https://discord.gg/renova) (coming soon)
+
 
 ---
 
@@ -486,7 +433,6 @@ This project is licensed under the **MIT License** - see [LICENSE](LICENSE) file
 
 - **Groq** - Free LLM API (Llama 3.3 70B)
 - **OpenAI** - CLIP and Whisper models
-- **Government of India** - Bhashini translation API
 - **OpenStreetMap** - Geospatial data and routing
 - **MongoDB** - Database platform
 - **Qdrant** - Vector database for RAG
