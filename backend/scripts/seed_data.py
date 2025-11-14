@@ -207,10 +207,17 @@ async def seed_sample_users():
         }
     ]
     
-    await db.users.insert_many(users)
-    print(f"✅ Created {len(users)} sample user")
+    # Insert with upsert to avoid duplicates
+    try:
+        await db.users.insert_many(users)
+        print(f"✅ Created {len(users)} sample user")
+    except Exception as e:
+        if "duplicate key" in str(e):
+            print(f"⚠️  User already exists, skipping...")
+        else:
+            raise
     
-    # Create wallet
+    # Create wallet (with upsert)
     wallets = [
         {
             "user_id": user_object_id,  # Use ObjectId reference
@@ -222,8 +229,14 @@ async def seed_sample_users():
         }
     ]
     
-    await db.wallets.insert_many(wallets)
-    print(f"✅ Created {len(wallets)} wallet")
+    try:
+        await db.wallets.insert_many(wallets)
+        print(f"✅ Created {len(wallets)} wallet")
+    except Exception as e:
+        if "duplicate key" in str(e):
+            print(f"⚠️  Wallet already exists, skipping...")
+        else:
+            raise
     
     client.close()
 
@@ -281,20 +294,42 @@ async def seed_sample_recyclers():
         }
     ]
     
-    result = await db.recyclers.insert_many(recyclers)
-    recycler_ids = result.inserted_ids
-    print(f"✅ Created {len(recyclers)} sample recyclers")
-    print(f"   📍 Punjab EcoRecycle Hub: ~2 km away (NEAREST)")
-    print(f"   📍 GreenTech E-Waste: ~5 km away")
+    try:
+        result = await db.recyclers.insert_many(recyclers)
+        recycler_ids = result.inserted_ids
+        print(f"✅ Created {len(recyclers)} sample recyclers")
+        print(f"   📍 Punjab EcoRecycle Hub: ~2 km away (NEAREST)")
+        print(f"   📍 GreenTech E-Waste: ~5 km away")
+        
+        # Ensure geospatial index exists
+        print("🗺️  Creating geospatial index for recycler locations...")
+        await db.recyclers.create_index([("location", "2dsphere")])
+        print("✅ Geospatial index created")
+        
+    except Exception as e:
+        if "duplicate key" in str(e):
+            print(f"⚠️  Recyclers already exist, skipping...")
+            # Fetch existing recycler IDs
+            recycler_1 = await db.recyclers.find_one({"recycler_id": "recycler_patiala_001"})
+            recycler_2 = await db.recyclers.find_one({"recycler_id": "recycler_patiala_002"})
+            recycler_ids = [recycler_1["_id"], recycler_2["_id"]] if recycler_1 and recycler_2 else []
+            
+            # Still ensure index exists
+            print("🗺️  Ensuring geospatial index exists...")
+            await db.recyclers.create_index([("location", "2dsphere")])
+            print("✅ Geospatial index verified")
+        else:
+            raise
     
-    # Create recycler credentials
-    print("\n🔐 Creating recycler credentials...")
-    credentials = [
-        {
-            "recycler_id": recycler_ids[0],
-            "username": "recycler1",
-            "password": "password123",  # Plain text for demo (would hash in production)
-            "created_at": datetime.utcnow()
+    # Create recycler credentials (skip if error)
+    if recycler_ids:
+        print("\n🔐 Creating recycler credentials...")
+        credentials = [
+            {
+                "recycler_id": recycler_ids[0],
+                "username": "recycler1",
+                "password": "password123",  # Plain text for demo (would hash in production)
+                "created_at": datetime.utcnow()
         },
         {
             "recycler_id": recycler_ids[1],
@@ -304,10 +339,16 @@ async def seed_sample_recyclers():
         }
     ]
     
-    await db.recycler_credentials.insert_many(credentials)
-    print(f"✅ Created {len(credentials)} recycler credentials")
-    print(f"   👤 Username: recycler1, Password: password123")
-    print(f"   👤 Username: recycler2, Password: password123")
+    try:
+        await db.recycler_credentials.insert_many(credentials)
+        print(f"✅ Created {len(credentials)} recycler credentials")
+        print(f"   👤 Username: recycler1, Password: password123")
+        print(f"   👤 Username: recycler2, Password: password123")
+    except Exception as e:
+        if "duplicate key" in str(e):
+            print("⚠️  Recycler credentials already exist, skipping...")
+        else:
+            raise
     
     client.close()
 

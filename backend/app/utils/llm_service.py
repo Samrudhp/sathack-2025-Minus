@@ -228,7 +228,31 @@ class LLMService:
         
         # Save last section
         if current_section and section_content:
-            sections[current_section] = '\n'.join(section_content).strip()
+            # Keep as list for list fields, join for string fields
+            if current_section in ['recycler_ranking', 'pickup_suggestions', 'citations']:
+                sections[current_section] = section_content
+            else:
+                sections[current_section] = '\n'.join(section_content).strip()
+        
+        # Post-process sections - ensure list fields are lists
+        if isinstance(sections['recycler_ranking'], str):
+            # If it's a string, split by newlines and filter empty
+            sections['recycler_ranking'] = [
+                line.strip() for line in sections['recycler_ranking'].split('\n') 
+                if line.strip() and not line.strip().startswith('#')
+            ]
+        
+        if isinstance(sections['pickup_suggestions'], str):
+            sections['pickup_suggestions'] = [
+                line.strip() for line in sections['pickup_suggestions'].split('\n') 
+                if line.strip() and not line.strip().startswith('#')
+            ]
+        
+        if isinstance(sections['citations'], str):
+            sections['citations'] = [
+                line.strip() for line in sections['citations'].split('\n') 
+                if line.strip() and not line.strip().startswith('#')
+            ]
         
         # Fallback: if disposal_instruction is empty, use the entire response
         if not sections['disposal_instruction'].strip():
