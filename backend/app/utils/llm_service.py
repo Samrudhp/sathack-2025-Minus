@@ -1,12 +1,26 @@
 """
 LLM service using Groq for English reasoning
 """
-from groq import AsyncGroq
 import logging
 from typing import List, Dict, Optional
 import json
+import httpx
 
 from app.config import settings
+
+# Monkey patch for groq 0.4.1 compatibility with httpx 0.28+
+# The groq library tries to pass 'proxies' argument which was removed in httpx 0.28
+import groq._base_client as base_client
+original_init = httpx.AsyncClient.__init__
+
+def patched_init(self, *args, **kwargs):
+    # Remove 'proxies' argument if present (not supported in httpx 0.28+)
+    kwargs.pop('proxies', None)
+    return original_init(self, *args, **kwargs)
+
+httpx.AsyncClient.__init__ = patched_init
+
+from groq import AsyncGroq
 
 logger = logging.getLogger(__name__)
 
